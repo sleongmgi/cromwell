@@ -12,7 +12,9 @@ object Settings {
 
   val commonResolvers = List(
     "Broad Artifactory Releases" at "https://artifactory.broadinstitute.org/artifactory/libs-release/",
-    "Broad Artifactory Snapshots" at "https://artifactory.broadinstitute.org/artifactory/libs-snapshot/"
+    "Broad Artifactory Snapshots" at "https://artifactory.broadinstitute.org/artifactory/libs-snapshot/",
+     "takipi-sdk" at "https://dl.bintray.com/takipi/maven",
+     "typesafe-rp-mvn" at "https://repo.typesafe.com/typesafe/for-subscribers-only/AEE4D829FC38A3247F251ED25BA45ADD675D48EB"
   )
 
   /*

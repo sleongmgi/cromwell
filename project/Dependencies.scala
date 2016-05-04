@@ -58,7 +58,8 @@ object Dependencies {
 
   val coreDependencies = List(
     wdl4sDependency,
-    "com.typesafe" % "config" % "1.3.0"
+    "com.typesafe" % "config" % "1.3.0",
+    "com.typesafe.cinnamon" %% "cinnamon-takipi" % "1.2.2"
   )
 
   val engineDependencies = List(
