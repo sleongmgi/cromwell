@@ -2,7 +2,7 @@ package cromwell.backend.impl.local
 
 import akka.actor.Props
 import cromwell.backend._
-import cromwell.backend.io.{JobPaths, SharedFsExpressionFunctions}
+import cromwell.backend.io.{JobPaths, SharedFsExpressionFunctions, WorkflowPaths}
 import cromwell.core.CallContext
 import wdl4s.Call
 import wdl4s.expression.WdlStandardLibraryFunctions
@@ -17,9 +17,6 @@ case class LocalBackendLifecycleActorFactory(configurationDescriptor: BackendCon
     LocalJobExecutionActor.props(jobDescriptor, configurationDescriptor)
   }
 
-  override def workflowFinalizationActorProps(workflowDescriptor: BackendWorkflowDescriptor,
-                                              calls: Seq[Call]): Option[Props] = None
-
   override def expressionLanguageFunctions(workflowDescriptor: BackendWorkflowDescriptor,
                                            jobKey: BackendJobDescriptorKey): WdlStandardLibraryFunctions = {
     val jobPaths = new JobPaths(workflowDescriptor, configurationDescriptor.backendConfig, jobKey)
@@ -31,5 +28,8 @@ case class LocalBackendLifecycleActorFactory(configurationDescriptor: BackendCon
 
       new SharedFsExpressionFunctions(LocalJobExecutionActor.fileSystems, callContext)
   }
-}
 
+  override def getExecutionRootPath(workflowDescriptor: BackendWorkflowDescriptor) = {
+    Option(new WorkflowPaths(workflowDescriptor, configurationDescriptor.backendConfig).executionRoot)
+  }
+}
