@@ -3,6 +3,7 @@ package cromwell.backend
 import java.nio.file.Path
 
 import akka.actor.Props
+import cromwell.core.{ExecutionStore, OutputStore}
 import wdl4s.Call
 import wdl4s.expression.WdlStandardLibraryFunctions
 
@@ -14,8 +15,8 @@ trait BackendLifecycleActorFactory {
 
   def workflowFinalizationActorProps(workflowDescriptor: BackendWorkflowDescriptor,
                                      calls: Seq[Call],
-                                     executionStore: BackendExecutionStore,
-                                     outputStore: BackendOutputStore): Option[Props] = None
+                                     executionStore: ExecutionStore,
+                                     outputStore: OutputStore): Option[Props] = None
 
   def expressionLanguageFunctions(workflowDescriptor: BackendWorkflowDescriptor,
                                   jobKey: BackendJobDescriptorKey): WdlStandardLibraryFunctions

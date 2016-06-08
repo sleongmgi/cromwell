@@ -3,10 +3,9 @@ package cromwell.engine.workflow.lifecycle
 import java.nio.file.Path
 
 import akka.actor.Props
-import cromwell.core.{PathCopier, WorkflowId}
+import cromwell.core.{ExecutionStore, OutputStore, PathCopier, WorkflowId}
 import cromwell.engine.EngineWorkflowDescriptor
 import cromwell.engine.backend.{BackendConfiguration, CromwellBackends}
-import cromwell.engine.workflow.lifecycle.execution.{ExecutionStore, OutputStore}
 import wdl4s.ReportableSymbol
 import wdl4s.values.WdlSingleFile
 
