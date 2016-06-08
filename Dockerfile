@@ -6,12 +6,21 @@ EXPOSE 8000
 
 # Install Cromwell
 ADD . /cromwell
+RUN apt-get update && apt-get install -y libnss-sss
 RUN ["/bin/bash", "-c", "/cromwell/docker/install.sh /cromwell"]
 
 # Add Cromwell as a service (it will start when the container starts)
 RUN mkdir /etc/service/cromwell && \
     mkdir /var/log/cromwell && \
     cp /cromwell/docker/run.sh /etc/service/cromwell/run
+
+RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+#LSF: Java bug that need to change the /etc/timezone.
+#     The above /etc/localtime is not enough.
+RUN echo "America/Chicago" > /etc/timezone
+
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # These next 4 commands are for enabling SSH to the container.
 # id_rsa.pub is referenced below, but this should be any public key
