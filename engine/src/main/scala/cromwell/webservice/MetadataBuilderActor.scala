@@ -200,11 +200,10 @@ object MetadataBuilderActor {
     // events were recorded in the journal.
     val (workflowStatusEvents, workflowNonStatusEvents) = workflowEvents partition(_.key.key == WorkflowMetadataKeys.Status)
 
-    val stateOrdering = implicitly[Ordering[WorkflowState]]
-    val sortedStateEvents = workflowStatusEvents sortWith { case (a, b) => stateOrdering.lt(a.value.toWorkflowState, b.value.toWorkflowState) }
-    // This represents the state with the highest value in CRDT resolution, not necessarily the chronologically most recent state.
-    val maximumState = sortedStateEvents.reverse.headOption
-    workflowNonStatusEvents ++ maximumState.toList
+    val ordering = implicitly[Ordering[WorkflowState]]
+    // This orders by value in WorkflowState CRDT resolution, not necessarily the chronologically most recent state.
+    val sortedStateEvents = workflowStatusEvents sortWith { case (a, b) => ordering.gt(a.value.toWorkflowState, b.value.toWorkflowState) }
+    workflowNonStatusEvents ++ sortedStateEvents.headOption.toList
   }
 
   private def parseWorkflowEventsToIndexedJsonValue(events: Seq[MetadataEvent]): IndexedJsonValue = {
