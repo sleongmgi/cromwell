@@ -22,6 +22,30 @@ RUN mkdir /etc/service/cromwell && \
     rm -rf /tmp/* && \
     rm -rf /var/tmp/*
 
+RUN apt-get update && apt-get install -y libnss-sss
+
+RUN ln -sf /usr/share/zoneinfo/America/Chicago /etc/localtime
+
+#LSF: Java bug that need to change the /etc/timezone.
+#     The above /etc/localtime is not enough.
+RUN echo "America/Chicago" > /etc/timezone
+
+RUN dpkg-reconfigure --frontend noninteractive tzdata
+
+#LSF: Install mysql
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y mysql-server
+
+#LSF: Remove default mysql directories
+RUN chmod -R 777 /var/lib/mysql /var/run/mysqld /var/log/mysql
+RUN rm -fr /var/lib/mysql/mysql /var/lib/mysql/performance_schema
+
+#LSF: This is needed to generate uuid
+RUN apt-get install uuid-runtime
+
+#LSF: Clean up the app cache
+RUN apt-get clean
+
 # These next 4 commands are for enabling SSH to the container.
 # id_rsa.pub is referenced below, but this should be any public key
 # that you want to be added to authorized_keys for the root user.
